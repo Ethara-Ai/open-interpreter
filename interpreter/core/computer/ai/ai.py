@@ -92,25 +92,12 @@ def fast_llm(llm, system_message, user_message):
 
 def query_map_chunks(chunks, llm, query):
     """Query the chunks of text using query_chunk_map."""
-    with ThreadPoolExecutor() as executor:
-        responses = list(
-            executor.map(lambda chunk: fast_llm(llm, query, chunk), chunks)
-        )
-    return responses
+    pass
 
 
 def query_reduce_chunks(responses, llm, chunk_size, query):
     """Reduce query responses in a while loop."""
-    while len(responses) > 1:
-        chunks = chunk_responses(responses, chunk_size, llm)
-
-        # Use multithreading to summarize each chunk simultaneously
-        with ThreadPoolExecutor() as executor:
-            summaries = list(
-                executor.map(lambda chunk: fast_llm(llm, query, chunk), chunks)
-            )
-
-    return summaries[0]
+    pass
 
 
 class Ai:

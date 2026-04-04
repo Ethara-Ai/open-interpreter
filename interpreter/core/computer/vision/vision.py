@@ -66,58 +66,7 @@ class Vision:
         """
         Gets OCR of image.
         """
-
-        if lmc:
-            if "base64" in lmc["format"]:
-                # # Extract the extension from the format, default to 'png' if not specified
-                # if "." in lmc["format"]:
-                #     extension = lmc["format"].split(".")[-1]
-                # else:
-                #     extension = "png"
-                # Save the base64 content as a temporary file
-                img_data = base64.b64decode(lmc["content"])
-                with tempfile.NamedTemporaryFile(
-                    delete=False, suffix=".png"
-                ) as temp_file:
-                    temp_file.write(img_data)
-                    temp_file_path = temp_file.name
-
-                # Set path to the path of the temporary file
-                path = temp_file_path
-
-            elif lmc["format"] == "path":
-                # Convert to base64
-                path = lmc["content"]
-        elif base_64:
-            # Save the base64 content as a temporary file
-            img_data = base64.b64decode(base_64)
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
-                temp_file.write(img_data)
-                temp_file_path = temp_file.name
-
-            # Set path to the path of the temporary file
-            path = temp_file_path
-        elif path:
-            pass
-        elif pil_image:
-            with tempfile.NamedTemporaryFile(delete=False, suffix=".png") as temp_file:
-                pil_image.save(temp_file, format="PNG")
-                temp_file_path = temp_file.name
-
-            # Set path to the path of the temporary file
-            path = temp_file_path
-
-        try:
-            if not self.easyocr:
-                self.load(load_moondream=False)
-            result = self.easyocr.readtext(path)
-            text = " ".join([item[1] for item in result])
-            return text.strip()
-        except ImportError:
-            print(
-                "\nTo use local vision, run `pip install 'open-interpreter[local]'`.\n"
-            )
-            return ""
+        pass
 
     def query(
         self,
@@ -130,46 +79,4 @@ class Vision:
         """
         Uses Moondream to ask query of the image (which can be a base64, path, or lmc message)
         """
-
-        if self.model == None and self.tokenizer == None:
-            try:
-                success = self.load(load_easyocr=False)
-            except ImportError:
-                print(
-                    "\nTo use local vision, run `pip install 'open-interpreter[local]'`.\n"
-                )
-                return ""
-            if not success:
-                return ""
-
-        if lmc:
-            if "base64" in lmc["format"]:
-                # # Extract the extension from the format, default to 'png' if not specified
-                # if "." in lmc["format"]:
-                #     extension = lmc["format"].split(".")[-1]
-                # else:
-                #     extension = "png"
-
-                # Decode the base64 image
-                img_data = base64.b64decode(lmc["content"])
-                img = Image.open(io.BytesIO(img_data))
-
-            elif lmc["format"] == "path":
-                # Convert to base64
-                image_path = lmc["content"]
-                img = Image.open(image_path)
-        elif base_64:
-            img_data = base64.b64decode(base_64)
-            img = Image.open(io.BytesIO(img_data))
-        elif path:
-            img = Image.open(path)
-        elif pil_image:
-            img = pil_image
-
-        with contextlib.redirect_stdout(open(os.devnull, "w")):
-            enc_image = self.model.encode_image(img)
-            answer = self.model.answer_question(
-                enc_image, query, self.tokenizer, max_length=400
-            )
-
-        return answer
+        pass

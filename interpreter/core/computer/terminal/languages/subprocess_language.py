@@ -33,7 +33,7 @@ class SubprocessLanguage(BaseLanguage):
 
         Optionally, add active line markers for detect_active_line.
         """
-        return code
+        pass
 
     def terminate(self):
         if self.process:

@@ -40,11 +40,7 @@ class _BashSession:
 
     def stop(self):
         """Terminate the bash shell."""
-        if not self._started:
-            raise ToolError("Session has not started.")
-        if self._process.returncode is not None:
-            return
-        self._process.terminate()
+        pass
 
     async def run(self, command: str):
         """Execute a command in the bash shell."""

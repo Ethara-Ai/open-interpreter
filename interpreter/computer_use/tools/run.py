@@ -8,11 +8,7 @@ MAX_RESPONSE_LEN: int = 16000
 
 def maybe_truncate(content: str, truncate_after: int | None = MAX_RESPONSE_LEN):
     """Truncate content and append a notice if content exceeds the specified length."""
-    return (
-        content
-        if not truncate_after or len(content) <= truncate_after
-        else content[:truncate_after] + TRUNCATED_MESSAGE
-    )
+    pass
 
 
 async def run(

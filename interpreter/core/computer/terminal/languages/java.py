@@ -130,17 +130,4 @@ def preprocess_java(code):
     Add active line markers
     Add end of execution marker
     """
-    lines = code.split("\n")
-    processed_lines = []
-
-    for i, line in enumerate(lines, 1):
-        # Add active line print
-        processed_lines.append(f'System.out.println("##active_line{i}##");')
-        processed_lines.append(line)
-
-    # Join lines to form the processed code
-    code = "\n".join(processed_lines)
-
-    # Add end of execution marker
-    code += '\nSystem.out.println("##end_of_execution##");'
-    return code
+    pass

@@ -362,53 +362,14 @@ def preprocess_python(code):
     Add active line markers
     Wrap in a try except
     """
-
-    code = code.strip()
-
-    # Add print commands that tell us what the active line is
-    # but don't do this if any line starts with ! or %
-    if (
-        not any(line.strip().startswith(("!", "%")) for line in code.split("\n"))
-        and os.environ.get("INTERPRETER_ACTIVE_LINE_DETECTION", "True").lower()
-        == "true"
-    ):
-        code = add_active_line_prints(code)
-
-    # Wrap in a try except (DISABLED)
-    # code = wrap_in_try_except(code)
-
-    # Remove any whitespace lines, as this will break indented blocks
-    # (are we sure about this? test this)
-    code_lines = code.split("\n")
-    code_lines = [c for c in code_lines if c.strip() != ""]
-    code = "\n".join(code_lines)
-
-    return code
+    pass
 
 
 def add_active_line_prints(code):
     """
     Add print statements indicating line numbers to a python string.
     """
-    # Replace newlines and comments with pass statements, so the line numbers are accurate (ast will remove them otherwise)
-    code_lines = code.split("\n")
-    in_multiline_string = False
-    for i in range(len(code_lines)):
-        line = code_lines[i]
-        if '"""' in line or "'''" in line:
-            in_multiline_string = not in_multiline_string
-        if not in_multiline_string and (line.strip().startswith("#") or line == ""):
-            whitespace = len(line) - len(line.lstrip(" "))
-            code_lines[i] = " " * whitespace + "pass"
-    processed_code = "\n".join(code_lines)
-    try:
-        tree = ast.parse(processed_code)
-    except:
-        # If you can't parse the processed version, try the unprocessed version before giving up
-        tree = ast.parse(code)
-    transformer = AddLinePrints()
-    new_tree = transformer.visit(tree)
-    return ast.unparse(new_tree)
+    pass
 
 
 class AddLinePrints(ast.NodeTransformer):
@@ -419,49 +380,15 @@ class AddLinePrints(ast.NodeTransformer):
 
     def insert_print_statement(self, line_number):
         """Inserts a print statement for a given line number."""
-        return ast.Expr(
-            value=ast.Call(
-                func=ast.Name(id="print", ctx=ast.Load()),
-                args=[ast.Constant(value=f"##active_line{line_number}##")],
-                keywords=[],
-            )
-        )
+        pass
 
     def process_body(self, body):
         """Processes a block of statements, adding print calls."""
-        new_body = []
-
-        # In case it's not iterable:
-        if not isinstance(body, list):
-            body = [body]
-
-        for sub_node in body:
-            if hasattr(sub_node, "lineno"):
-                new_body.append(self.insert_print_statement(sub_node.lineno))
-            new_body.append(sub_node)
-
-        return new_body
+        pass
 
     def visit(self, node):
         """Overridden visit to transform nodes."""
-        new_node = super().visit(node)
-
-        # If node has a body, process it
-        if hasattr(new_node, "body"):
-            new_node.body = self.process_body(new_node.body)
-
-        # If node has an orelse block (like in for, while, if), process it
-        if hasattr(new_node, "orelse") and new_node.orelse:
-            new_node.orelse = self.process_body(new_node.orelse)
-
-        # Special case for Try nodes as they have multiple blocks
-        if isinstance(new_node, ast.Try):
-            for handler in new_node.handlers:
-                handler.body = self.process_body(handler.body)
-            if new_node.finalbody:
-                new_node.finalbody = self.process_body(new_node.finalbody)
-
-        return new_node
+        pass
 
 
 def wrap_in_try_except(code):

@@ -42,31 +42,14 @@ def preprocess_shell(code):
     Wrap in a try except (trap in shell)
     Add end of execution marker
     """
-
-    # Add commands that tell us what the active line is
-    # if it's multiline, just skip this. soon we should make it work with multiline
-    if (
-        not has_multiline_commands(code)
-        and os.environ.get("INTERPRETER_ACTIVE_LINE_DETECTION", "True").lower()
-        == "true"
-    ):
-        code = add_active_line_prints(code)
-
-    # Add end command (we'll be listening for this so we know when it ends)
-    code += '\necho "##end_of_execution##"'
-
-    return code
+    pass
 
 
 def add_active_line_prints(code):
     """
     Add echo statements indicating line numbers to a shell string.
     """
-    lines = code.split("\n")
-    for index, line in enumerate(lines):
-        # Insert the echo command before the actual line
-        lines[index] = f'echo "##active_line{index + 1}##"\n{line}'
-    return "\n".join(lines)
+    pass
 
 
 def has_multiline_commands(script_text):

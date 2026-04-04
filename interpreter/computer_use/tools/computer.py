@@ -221,62 +221,12 @@ class ComputerTool(BaseAnthropicTool):
 
     async def screenshot(self):
         """Take a screenshot of the current screen and return the base64 encoded image."""
-        temp_dir = Path(tempfile.gettempdir())
-        path = temp_dir / f"screenshot_{uuid4().hex}.png"
-
-        screenshot = pyautogui.screenshot()
-        screenshot.save(str(path))
-
-        if self._scaling_enabled:
-            x, y = self.scale_coordinates(
-                ScalingSource.COMPUTER, self.width, self.height
-            )
-            # Use PIL directly instead of shell convert command
-            from PIL import Image
-
-            with Image.open(path) as img:
-                img = img.resize((x, y), Image.Resampling.LANCZOS)
-                img.save(path)
-
-        if path.exists():
-            base64_image = base64.b64encode(path.read_bytes()).decode()
-            path.unlink()  # Remove the temporary file
-            return ToolResult(base64_image=base64_image)
-        raise ToolError(f"Failed to take screenshot")
+        pass
 
     async def shell(self, command: str, take_screenshot=True) -> ToolResult:
         """Run a shell command and return the output, error, and optionally a screenshot."""
-        _, stdout, stderr = await run(command)
-        base64_image = None
-
-        if take_screenshot:
-            # delay to let things settle before taking a screenshot
-            await asyncio.sleep(self._screenshot_delay)
-            base64_image = (await self.screenshot()).base64_image
-
-        return ToolResult(output=stdout, error=stderr, base64_image=base64_image)
+        pass
 
     def scale_coordinates(self, source: ScalingSource, x: int, y: int):
         """Scale coordinates to a target maximum resolution."""
-        if not self._scaling_enabled:
-            return x, y
-        ratio = self.width / self.height
-        target_dimension = None
-        for dimension in MAX_SCALING_TARGETS.values():
-            # allow some error in the aspect ratio - not ratios are exactly 16:9
-            if abs(dimension["width"] / dimension["height"] - ratio) < 0.02:
-                if dimension["width"] < self.width:
-                    target_dimension = dimension
-                break
-        if target_dimension is None:
-            return x, y
-        # should be less than 1
-        x_scaling_factor = target_dimension["width"] / self.width
-        y_scaling_factor = target_dimension["height"] / self.height
-        if source == ScalingSource.API:
-            if x > self.width or y > self.height:
-                raise ToolError(f"Coordinates {x}, {y} are out of bounds")
-            # scale up
-            return round(x / x_scaling_factor), round(y / y_scaling_factor)
-        # scale down
-        return round(x * x_scaling_factor), round(y * y_scaling_factor)
+        pass

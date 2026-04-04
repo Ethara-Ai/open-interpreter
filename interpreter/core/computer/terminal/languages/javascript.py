@@ -41,30 +41,4 @@ def preprocess_javascript(code):
     Wrap in a try catch
     Add end of execution marker
     """
-
-    # Detect if nothing in the code is multiline. (This is waaaay to false-positive-y but it works)
-    nothing_multiline = not any(char in code for char in ["{", "}", "[", "]"])
-
-    if nothing_multiline:
-        # Split code into lines
-        lines = code.split("\n")
-        processed_lines = []
-        for i, line in enumerate(lines, 1):
-            # Add active line print
-            processed_lines.append(f'console.log("##active_line{i}##");')
-            processed_lines.append(line)
-
-        # Join lines to form the processed code
-        code = "\n".join(processed_lines)
-
-    # Wrap in a try-catch and add end of execution marker
-    code = f"""
-try {{
-{code}
-}} catch (e) {{
-    console.log(e);
-}}
-console.log("##end_of_execution##");
-"""
-
-    return code
+    pass

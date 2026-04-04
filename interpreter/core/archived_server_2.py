@@ -107,7 +107,7 @@ class AsyncInterpreter:
         """
         Synchronous function to add a chunk to the output queue.
         """
-        asyncio.create_task(self._add_to_queue(self._output_queue, chunk))
+        pass
 
     async def run(self):
         """
